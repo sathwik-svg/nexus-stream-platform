@@ -36,7 +36,7 @@ export async function exportReportToDocx(report: ProjectReportData): Promise<Blo
         children: [
           // Header / Title block
           new Paragraph({
-            text: report.organization.toUpperCase(),
+            text: (report.author?.organization || 'ENTERPRISE CLOUD TECHNOLOGIES INC.').toUpperCase(),
             style: 'Header',
             spacing: { after: 120 },
             children: [

@@ -61,3 +61,11 @@ test('generateMarkdownReport produces populated markdown document with correct h
   assert.ok(md.includes('### 8. Future Roadmap & Planned Improvements'));
   assert.ok(md.includes('Figure 1: Executive telemetry operations dashboard'));
 });
+
+test('exportReportToDocx generates valid docx Blob without throwing errors', async () => {
+  const { exportReportToDocx } = await import('./docxExport');
+  const blob = await exportReportToDocx(defaultProjectReport);
+  assert.ok(blob instanceof Blob, 'Output must be a Blob instance');
+  assert.ok(blob.size > 1000, `Expected blob size > 1000 bytes, got ${blob.size}`);
+});
+
