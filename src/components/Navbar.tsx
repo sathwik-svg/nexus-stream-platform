@@ -12,6 +12,7 @@ import {
   Sparkles,
   Loader2,
 } from 'lucide-react';
+import { ThreeDButton } from './ThreeDButton';
 
 interface NavbarProps {
   currentView: 'showcase' | 'document';
@@ -105,29 +106,27 @@ export const Navbar: React.FC<NavbarProps> = ({
           </button>
 
           {/* Download DOCX */}
-          <button
+          <ThreeDButton
+            size="sm"
+            variant="secondary"
             onClick={onDownloadDocx}
             title="Download Word Document (.docx)"
-            className="flex items-center gap-1.5 text-xs bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-800 px-3 py-1.5 rounded-lg font-medium transition-colors"
+            icon={<Download className="w-3.5 h-3.5 text-emerald-400" />}
           >
-            <Download className="w-3.5 h-3.5 text-emerald-400" />
             <span className="hidden sm:inline">DOCX</span>
-          </button>
+          </ThreeDButton>
 
           {/* Download PDF (Direct File Download) */}
-          <button
+          <ThreeDButton
+            size="sm"
+            variant="primary"
             onClick={onDownloadPdf}
             disabled={isGeneratingPdf}
             title="Directly download high-resolution PDF file (4 Pages)"
-            className="flex items-center gap-1.5 text-xs bg-sky-600 hover:bg-sky-500 disabled:opacity-50 text-white font-semibold px-3.5 py-1.5 rounded-lg shadow-sm shadow-sky-600/20 transition-all"
+            icon={isGeneratingPdf ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Download className="w-3.5 h-3.5" />}
           >
-            {isGeneratingPdf ? (
-              <Loader2 className="w-3.5 h-3.5 animate-spin" />
-            ) : (
-              <Download className="w-3.5 h-3.5" />
-            )}
-            <span>{isGeneratingPdf ? 'Building PDF...' : 'Download PDF'}</span>
-          </button>
+            <span>{isGeneratingPdf ? 'Building...' : 'Download PDF'}</span>
+          </ThreeDButton>
 
           {/* Browser Print (Secondary) */}
           <button

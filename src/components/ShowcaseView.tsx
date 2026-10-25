@@ -24,7 +24,10 @@ import {
   Clock,
   BarChart3,
   X,
+  Box,
 } from 'lucide-react';
+import { ThreeDButton } from './ThreeDButton';
+import { Interactive3DScene } from './Interactive3DScene';
 
 interface ShowcaseViewProps {
   report: ProjectReportData;
@@ -50,6 +53,7 @@ export const ShowcaseView: React.FC<ShowcaseViewProps> = ({
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [enlargedScreenshot, setEnlargedScreenshot] = useState<ProjectScreenshot | null>(null);
   const [activeChallengeId, setActiveChallengeId] = useState<string>(report.challenges[0]?.id || '');
+  const [architectureMode, setArchitectureMode] = useState<'3d' | 'diagram'>('3d');
 
   const categories = ['All', 'Frontend', 'Backend', 'Database & Storage', 'DevOps & Cloud', 'Testing & Tools'];
 
@@ -116,43 +120,51 @@ export const ShowcaseView: React.FC<ShowcaseViewProps> = ({
 
           {/* CTA Buttons */}
           <div className="flex flex-wrap items-center gap-3 mt-8 pt-6 border-t border-slate-800">
-            <button
+            <ThreeDButton
+              variant="primary"
+              size="lg"
               onClick={onDownloadPdf}
               disabled={isGeneratingPdf}
-              className="bg-sky-600 hover:bg-sky-500 disabled:opacity-50 text-white font-semibold px-5 py-2.5 rounded-xl shadow-lg shadow-sky-600/20 flex items-center gap-2 text-sm transition-all"
+              icon={<Download className="w-4 h-4" />}
             >
-              <Download className="w-4 h-4" />
               <span>{isGeneratingPdf ? 'Generating PDF...' : 'Download PDF Report (4p)'}</span>
-            </button>
-            <button
+            </ThreeDButton>
+
+            <ThreeDButton
+              variant="emerald"
+              size="lg"
               onClick={onDownloadDocx}
-              className="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold px-4 py-2.5 rounded-xl flex items-center gap-2 text-sm transition-all"
+              icon={<Download className="w-4 h-4 text-emerald-200" />}
             >
-              <Download className="w-4 h-4 text-emerald-400" />
               Download DOCX
-            </button>
-            <button
+            </ThreeDButton>
+
+            <ThreeDButton
+              variant="secondary"
+              size="lg"
               onClick={onSwitchToDocumentView}
-              className="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold px-4 py-2.5 rounded-xl flex items-center gap-2 text-sm transition-all"
+              icon={<FileText className="w-4 h-4 text-sky-400" />}
             >
-              <FileText className="w-4 h-4 text-sky-400" />
               View 4-Page Document
-            </button>
+            </ThreeDButton>
+
             <div className="ml-auto flex items-center gap-2">
-              <button
+              <ThreeDButton
+                variant="secondary"
+                size="md"
                 onClick={onOpenLiveDemo}
-                className="bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 border border-emerald-500/30 px-4 py-2.5 rounded-xl text-sm font-semibold flex items-center gap-2 transition-colors"
+                icon={<ExternalLink className="w-4 h-4 text-emerald-400" />}
               >
-                <ExternalLink className="w-4 h-4" />
                 Live Demo
-              </button>
-              <button
+              </ThreeDButton>
+              <ThreeDButton
+                variant="secondary"
+                size="md"
                 onClick={onOpenGitHub}
-                className="bg-slate-800 hover:bg-slate-700 text-white px-4 py-2.5 rounded-xl text-sm font-semibold flex items-center gap-2 border border-slate-700 transition-colors"
+                icon={<Github className="w-4 h-4 text-slate-200" />}
               >
-                <Github className="w-4 h-4" />
                 GitHub Code
-              </button>
+              </ThreeDButton>
             </div>
           </div>
         </div>
@@ -272,19 +284,45 @@ export const ShowcaseView: React.FC<ShowcaseViewProps> = ({
 
       {/* Section 3: Architecture & Workflow Diagram */}
       <section className="space-y-6">
-        <div className="border-b border-slate-800 pb-3">
-          <h2 className="text-xl md:text-2xl font-bold text-white flex items-center gap-2">
-            <span className="w-7 h-7 rounded-lg bg-sky-500/20 text-sky-400 flex items-center justify-center text-sm font-mono font-bold">
-              03
-            </span>
-            System Architecture & Project Workflow
-          </h2>
-          <p className="text-xs text-slate-400 mt-1">
-            Click on any architectural node to inspect its technical details, responsibilities, and SLA constraints.
-          </p>
+        <div className="flex flex-col md:flex-row md:items-center justify-between border-b border-slate-800 pb-3 gap-3">
+          <div>
+            <h2 className="text-xl md:text-2xl font-bold text-white flex items-center gap-2">
+              <span className="w-7 h-7 rounded-lg bg-sky-500/20 text-sky-400 flex items-center justify-center text-sm font-mono font-bold">
+                03
+              </span>
+              System Architecture & Project Workflow
+            </h2>
+            <p className="text-xs text-slate-400 mt-1">
+              Explore the real-time 3D hardware cluster model with moving data packets or the multi-tier workflow diagram.
+            </p>
+          </div>
+
+          {/* 3D vs 2D Diagram Mode Switcher */}
+          <div className="flex items-center gap-2 self-start md:self-auto">
+            <ThreeDButton
+              size="sm"
+              variant={architectureMode === '3d' ? 'primary' : 'secondary'}
+              onClick={() => setArchitectureMode('3d')}
+              icon={<Box className="w-3.5 h-3.5" />}
+            >
+              3D Real-Time Model
+            </ThreeDButton>
+            <ThreeDButton
+              size="sm"
+              variant={architectureMode === 'diagram' ? 'primary' : 'secondary'}
+              onClick={() => setArchitectureMode('diagram')}
+              icon={<Layers className="w-3.5 h-3.5" />}
+            >
+              2D Pipeline DAG
+            </ThreeDButton>
+          </div>
         </div>
 
-        <ArchitectureDiagram nodes={report.architectureNodes} flows={report.architectureFlows} isPrintView={false} />
+        {architectureMode === '3d' ? (
+          <Interactive3DScene />
+        ) : (
+          <ArchitectureDiagram nodes={report.architectureNodes} flows={report.architectureFlows} isPrintView={false} />
+        )}
       </section>
 
       {/* Section 4: Key Features */}
