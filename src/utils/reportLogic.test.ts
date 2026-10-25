@@ -69,3 +69,11 @@ test('exportReportToDocx generates valid docx Blob without throwing errors', asy
   assert.ok(blob.size > 1000, `Expected blob size > 1000 bytes, got ${blob.size}`);
 });
 
+test('generateVectorFallbackPdf generates valid pdf Blob without throwing errors', async () => {
+  const { generateVectorFallbackPdf } = await import('./pdfExport');
+  const blob = generateVectorFallbackPdf(defaultProjectReport);
+  assert.ok(blob instanceof Blob, 'Output must be a Blob instance');
+  assert.ok(blob.size > 1000, `Expected pdf blob size > 1000 bytes, got ${blob.size}`);
+});
+
+

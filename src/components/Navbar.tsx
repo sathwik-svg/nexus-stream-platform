@@ -7,11 +7,10 @@ import {
   Download,
   Printer,
   Sliders,
-  Github,
-  ExternalLink,
   Copy,
   Check,
   Sparkles,
+  Loader2,
 } from 'lucide-react';
 
 interface NavbarProps {
@@ -19,10 +18,12 @@ interface NavbarProps {
   onViewChange: (view: 'showcase' | 'document') => void;
   onOpenEdit: () => void;
   onDownloadDocx: () => void;
+  onDownloadPdf: () => void;
   onPrintPdf: () => void;
   onOpenDemo: () => void;
   onOpenGitHub: () => void;
   report: ProjectReportData;
+  isGeneratingPdf?: boolean;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -30,10 +31,10 @@ export const Navbar: React.FC<NavbarProps> = ({
   onViewChange,
   onOpenEdit,
   onDownloadDocx,
+  onDownloadPdf,
   onPrintPdf,
-  onOpenDemo,
-  onOpenGitHub,
   report,
+  isGeneratingPdf = false,
 }) => {
   const [copiedMd, setCopiedMd] = useState(false);
 
@@ -46,7 +47,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   return (
     <header className="sticky top-0 z-40 bg-slate-950/80 backdrop-blur-md border-b border-slate-800 print:hidden select-none">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-3">
         {/* Brand / Logo */}
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-sky-600 to-indigo-600 flex items-center justify-center text-white shadow-md shadow-sky-500/20">
@@ -59,7 +60,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 Deliverable
               </span>
             </div>
-            <div className="text-[11px] text-slate-400 truncate max-w-[200px] md:max-w-none">
+            <div className="text-[11px] text-slate-400 truncate max-w-[180px] md:max-w-none">
               {report.author.name} • {report.author.role}
             </div>
           </div>
@@ -97,10 +98,10 @@ export const Navbar: React.FC<NavbarProps> = ({
           <button
             onClick={handleCopyMarkdown}
             title="Copy Report in Markdown"
-            className="hidden md:flex items-center gap-1.5 text-xs bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 px-3 py-1.5 rounded-lg transition-colors"
+            className="hidden lg:flex items-center gap-1.5 text-xs bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 px-2.5 py-1.5 rounded-lg transition-colors"
           >
             {copiedMd ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
-            <span>{copiedMd ? 'Copied MD' : 'Copy MD'}</span>
+            <span>{copiedMd ? 'Copied' : 'Markdown'}</span>
           </button>
 
           {/* Download DOCX */}
@@ -113,14 +114,28 @@ export const Navbar: React.FC<NavbarProps> = ({
             <span className="hidden sm:inline">DOCX</span>
           </button>
 
-          {/* Export PDF (Print) */}
+          {/* Download PDF (Direct File Download) */}
+          <button
+            onClick={onDownloadPdf}
+            disabled={isGeneratingPdf}
+            title="Directly download high-resolution PDF file (4 Pages)"
+            className="flex items-center gap-1.5 text-xs bg-sky-600 hover:bg-sky-500 disabled:opacity-50 text-white font-semibold px-3.5 py-1.5 rounded-lg shadow-sm shadow-sky-600/20 transition-all"
+          >
+            {isGeneratingPdf ? (
+              <Loader2 className="w-3.5 h-3.5 animate-spin" />
+            ) : (
+              <Download className="w-3.5 h-3.5" />
+            )}
+            <span>{isGeneratingPdf ? 'Building PDF...' : 'Download PDF'}</span>
+          </button>
+
+          {/* Browser Print (Secondary) */}
           <button
             onClick={onPrintPdf}
-            title="Export as PDF Document via Print"
-            className="flex items-center gap-1.5 text-xs bg-sky-600 hover:bg-sky-500 text-white font-semibold px-3.5 py-1.5 rounded-lg shadow-sm shadow-sky-600/20 transition-all"
+            title="Open browser print preview dialog"
+            className="hidden sm:flex items-center text-slate-400 hover:text-white p-2 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-800 transition-colors"
           >
             <Printer className="w-3.5 h-3.5" />
-            <span>PDF (3-5p)</span>
           </button>
 
           {/* Edit / Customize */}

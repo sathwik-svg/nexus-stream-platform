@@ -32,7 +32,9 @@ interface ShowcaseViewProps {
   onOpenGitHub: () => void;
   onSwitchToDocumentView: () => void;
   onDownloadDocx: () => void;
+  onDownloadPdf: () => void;
   onPrintPdf: () => void;
+  isGeneratingPdf?: boolean;
 }
 
 export const ShowcaseView: React.FC<ShowcaseViewProps> = ({
@@ -41,7 +43,9 @@ export const ShowcaseView: React.FC<ShowcaseViewProps> = ({
   onOpenGitHub,
   onSwitchToDocumentView,
   onDownloadDocx,
+  onDownloadPdf,
   onPrintPdf,
+  isGeneratingPdf = false,
 }) => {
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [enlargedScreenshot, setEnlargedScreenshot] = useState<ProjectScreenshot | null>(null);
@@ -113,18 +117,12 @@ export const ShowcaseView: React.FC<ShowcaseViewProps> = ({
           {/* CTA Buttons */}
           <div className="flex flex-wrap items-center gap-3 mt-8 pt-6 border-t border-slate-800">
             <button
-              onClick={onSwitchToDocumentView}
-              className="bg-sky-600 hover:bg-sky-500 text-white font-semibold px-5 py-2.5 rounded-xl shadow-lg shadow-sky-600/20 flex items-center gap-2 text-sm transition-all"
+              onClick={onDownloadPdf}
+              disabled={isGeneratingPdf}
+              className="bg-sky-600 hover:bg-sky-500 disabled:opacity-50 text-white font-semibold px-5 py-2.5 rounded-xl shadow-lg shadow-sky-600/20 flex items-center gap-2 text-sm transition-all"
             >
-              <FileText className="w-4 h-4" />
-              View 4-Page Printable Report
-            </button>
-            <button
-              onClick={onPrintPdf}
-              className="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold px-4 py-2.5 rounded-xl flex items-center gap-2 text-sm transition-all"
-            >
-              <Download className="w-4 h-4 text-sky-400" />
-              Export PDF (Print)
+              <Download className="w-4 h-4" />
+              <span>{isGeneratingPdf ? 'Generating PDF...' : 'Download PDF Report (4p)'}</span>
             </button>
             <button
               onClick={onDownloadDocx}
@@ -132,6 +130,13 @@ export const ShowcaseView: React.FC<ShowcaseViewProps> = ({
             >
               <Download className="w-4 h-4 text-emerald-400" />
               Download DOCX
+            </button>
+            <button
+              onClick={onSwitchToDocumentView}
+              className="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold px-4 py-2.5 rounded-xl flex items-center gap-2 text-sm transition-all"
+            >
+              <FileText className="w-4 h-4 text-sky-400" />
+              View 4-Page Document
             </button>
             <div className="ml-auto flex items-center gap-2">
               <button
