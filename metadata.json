@@ -1,0 +1,6 @@
+{
+  "name": "Internship Project Showcase & Report Generator",
+  "description": "Professional 3–5 page technical internship report and interactive showcase with architecture diagrams, screenshots, challenges, key learnings, and PDF/DOCX export.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
